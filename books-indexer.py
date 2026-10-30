@@ -34,7 +34,7 @@ import meilisearch
 # ---------------------------------------------------------------------------
 config = dotenv_values(".env")
 MEILI_URL = f"http://{config["MEILI_HOST"]}:7700"
-MEILI_KEY = config["MEILI_MASTER_KEY"]
+MEILI_KEY = config["MEILI_ADMIN_KEY"]
 INDEX_UID = "books"
 PRIMARY_KEY = "id"
 
@@ -215,7 +215,8 @@ def search(client: meilisearch.Client, query: str, raw_filter: str | None = None
     result = client.index(INDEX_UID).search(query, opts)
     print(f"{result.get('estimatedTotalHits', 0)} hits for '{query}':")
     for hit in result.get("hits", []):
-        print(f"  [{hit['id']}] {hit['title']} — {hit['author']} ({hit.get('editor')})")
+        print(f"  [{hit['id']}] {hit['title']} - {hit['author']} ({hit.get('editor')}) \
+            - ocr: {hit.get('ocr_keywords')} - id_app: {hit.get('id_app')} - id_user: {hit.get('id_user')} ")
 
 
 def main() -> None:
